@@ -1,8 +1,9 @@
 defmodule AntlPhonenumber do
-  @moduledoc """
-  AntlPhonenumber is a third-party port of the [google libphonenumber library](https://github.com/google/libphonenumber).
-  The library is based on its cpp part and implements NIF functions.
-  """
+  @moduledoc "README.md"
+             |> File.read!()
+             |> String.split("<!-- MDOC !-->")
+             |> Enum.fetch!(1)
+
   alias AntlPhonenumber.Nif
 
   @default_ref_country_code "IL"

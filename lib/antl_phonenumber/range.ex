@@ -95,7 +95,5 @@ defmodule AntlPhonenumber.Range do
 
   defimpl Inspect do
     def inspect(%AntlPhonenumber.Range{first: first, last: last}, _), do: "#{first}..#{last}"
-
-    # def inspect(range, opts), do: Inspect.Any.inspect(range, opts)
   end
 end

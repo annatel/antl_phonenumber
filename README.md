@@ -19,3 +19,8 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/antl_phonenumber](https://hexdocs.pm/antl_phonenumber).
 
+<!-- MDOC !-->
+AntlPhonenumber is a third-party port of the [google libphonenumber library](https://github.com/google/libphonenumber).
+The library is based on its cpp part and implements NIF functions.
+
+<!-- LDFLAGS=-L/usr/local/lib CPPFLAGS=-L/usr/local/include make clean all -->
