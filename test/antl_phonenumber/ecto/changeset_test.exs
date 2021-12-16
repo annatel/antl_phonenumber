@@ -47,7 +47,7 @@ defmodule AntlPhonenumber.Ecto.ChangesetTest do
     end
 
     test "when the type is the expected one" do
-      type = type()
+      type = :mobile
 
       changeset =
         %Schema{}
