@@ -208,6 +208,7 @@ defmodule AntlPhonenumberTest do
     assert AntlPhonenumber.to_country_code!("972") == "IL"
     assert AntlPhonenumber.to_country_code!("33") == "FR"
     assert AntlPhonenumber.to_country_code!("1") == "US"
-    assert AntlPhonenumber.to_country_code!("wrong")
+    assert AntlPhonenumber.to_country_code!("00000")
+    assert_raise ArgumentError, fn -> AntlPhonenumber.to_country_code!("eeee") end
   end
 end

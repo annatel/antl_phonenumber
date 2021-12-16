@@ -77,6 +77,12 @@ defmodule AntlPhonenumber.RangeTest do
                AntlPhonenumber.localize(move(first, 2)),
                AntlPhonenumber.localize(move(first, 3))
              ]
+
+      # reduce
+      assert Range.new(first, last, country_code) |> Enum.slice(1..2) == [
+               move(first, 1),
+               move(first, 2)
+             ]
     end
 
     test "descendant range" do
@@ -101,6 +107,13 @@ defmodule AntlPhonenumber.RangeTest do
                AntlPhonenumber.localize(move(first, 2)),
                AntlPhonenumber.localize(move(first, 1)),
                AntlPhonenumber.localize(first)
+             ]
+
+      # reduce
+      assert Range.new(last, first, country_code)
+             |> Enum.slice(1..2) == [
+               move(first, 2),
+               move(first, 1)
              ]
     end
   end

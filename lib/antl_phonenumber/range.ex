@@ -69,16 +69,13 @@ defmodule AntlPhonenumber.Range do
         else: range.last <= plus_e164 and plus_e164 <= range.first
     end
 
-    def count(%AntlPhonenumber.Range{} = range) do
-      if asc?(range),
-        do: {:ok, to_integer(range.last) - to_integer(range.first) + 1},
-        else: {:ok, to_integer(range.first) - to_integer(range.last) + 1}
-    end
+    def count(%AntlPhonenumber.Range{} = range),
+      do: {:ok, abs(to_integer(range.last) - to_integer(range.first)) + 1}
 
     def slice(%AntlPhonenumber.Range{} = range) do
       if asc?(range),
-        do: {:ok, count(range), &slice_asc(move(range.first, &1), &2)},
-        else: {:ok, count(range), &slice_desc(move(range.first, -&1), &2)}
+        do: {:ok, Enum.count(range), &slice_asc(move(range.first, &1), &2)},
+        else: {:ok, Enum.count(range), &slice_desc(move(range.first, -&1), &2)}
     end
 
     defp slice_asc(current, 1), do: [current]
