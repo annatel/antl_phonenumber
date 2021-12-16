@@ -188,7 +188,7 @@ defmodule AntlPhonenumber do
   @doc """
   Get from Google a plus e164 number.
   """
-  @spec get_plus_e164_example(binary, binary) :: binary
+  @spec get_plus_e164_example(binary, atom) :: binary
   def get_plus_e164_example(country_code, type) when type in @supported_types do
     Nif.get_plus_e164_example(to_charlist(country_code), type |> to_string |> to_charlist())
     |> to_string
