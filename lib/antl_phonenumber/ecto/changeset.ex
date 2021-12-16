@@ -5,7 +5,7 @@ if Code.ensure_loaded?(Ecto.Changeset) do
     """
     import Ecto.Changeset, only: [validate_change: 3]
 
-    @spec validate_country_code(Ecto.Changeset.t(), atom, binary) :: keyword
+    @spec validate_country_code(Ecto.Changeset.t(), atom, binary) :: Ecto.Changeset.t()
     def validate_country_code(changeset, field, country_code) when is_binary(country_code) do
       validate_change(changeset, field, fn field, value ->
         if AntlPhonenumber.get_country_code!(value) == country_code,
@@ -14,7 +14,7 @@ if Code.ensure_loaded?(Ecto.Changeset) do
       end)
     end
 
-    @spec validate_country_code(Ecto.Changeset.t(), atom, atom) :: keyword
+    @spec validate_country_code(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
     def validate_type(changeset, field, type) when is_atom(type) do
       validate_change(changeset, field, fn field, value ->
         case AntlPhonenumber.get_type(value) do

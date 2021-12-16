@@ -13,7 +13,8 @@ defmodule AntlPhonenumber.Factory do
 
   def not_number(), do: "eeeee"
 
-  def country_code(), do: Enum.random(["IL", "FR", "US"])
+  def country_code(), do: Enum.random(["IL", "FR"])
 
+  @spec type :: any
   def type(), do: AntlPhonenumber.supported_types() |> Enum.random()
 end
