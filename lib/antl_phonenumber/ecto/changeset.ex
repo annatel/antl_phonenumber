@@ -14,7 +14,7 @@ if Code.ensure_loaded?(Ecto.Changeset) do
       end)
     end
 
-    @spec validate_country_code(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
+    @spec validate_type(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
     def validate_type(changeset, field, type) when is_atom(type) do
       validate_change(changeset, field, fn field, value ->
         case AntlPhonenumber.get_type(value) do

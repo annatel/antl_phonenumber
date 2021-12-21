@@ -1,9 +1,9 @@
 defmodule AntlPhonenumber.Nif do
   @on_load :init
 
-  @nif_path "priv/antl_phonenumber_nif"
+  @nif_path 'antl_phonenumber_nif'
   def init do
-    path = Application.app_dir(:antl_phonenumber, @nif_path) |> String.to_charlist()
+    path = :filename.join(:code.priv_dir(:antl_phonenumber), @nif_path)
 
     :ok = :erlang.load_nif(path, 0)
   end

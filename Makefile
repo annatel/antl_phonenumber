@@ -1,26 +1,50 @@
-CC=gcc
-CXX=g++
-RM=rm -f
-ERLANG_PATH = $(shell erl -eval 'io:format("~s", [lists:concat([code:root_dir(), "/erts-", erlang:system_info(version), "/include"])])' -s init stop -noshell)
-CPPFLAGS=-O3 -I ../libphonenumber/cpp/src  -I $(ERLANG_PATH) -fPIC
-LDFLAGS= -L ../libphonenumber/cpp/build
+#
+# Makefile for building the NIF
+#
+# Makefile targets:
+#
+# all    build and install the NIF
+# clean  clean build products and intermediates
+#
+# Variables to override:
+#
+#
+# CXXFLAGS      compiler flags for compiling all C++ files
+# LDFLAGS       linker flags for linking all binaries
+#
+
+CXXFLAGS += -O3
 LDLIBS=-lphonenumber
-# LD_LIBRARY_PATH=../libphonenumber/cpp/build:/usr/lib/x86_64-linux-gnu/libprotobuf.so.10
+CXXFLAGS += -I$(ERTS_INCLUDE_DIR)
 
-ObjectsDir := ./priv
-SRCFILES := $(shell find . -name "*.cpp")
-OBJS  := $(patsubst src/%.cpp, $(ObjectsDir)/%.o, $(SRCFILES))
+KERNEL_NAME := $(shell uname -s)
+ifeq ($(KERNEL_NAME), Linux)
+	CXXFLAGS += -fPIC -fvisibility=hidden
+	LDFLAGS += -fPIC -shared
+endif
+ifeq ($(KERNEL_NAME), Darwin)
+	CXXFLAGS += -fPIC
+	LDFLAGS += -dynamiclib -undefined dynamic_lookup
+endif
 
-all: antl_phonenumberso
+OBJSDIR=priv
+SRCDIR=cpp_src
+SRCFILES=$(shell find . -name "*.cpp")
+OBJS=$(subst $(SRCDIR),$(OBJSDIR),$(patsubst %.cpp, %.o,$(SRCFILES)))
+LIB_NAME=$(OBJSDIR)/antl_phonenumber_nif.so
 
-$(ObjectsDir)/%.o: %.cpp
-	$(CXX) $(CPPFLAGS) -c $< -o $@
+.PHONY: clean distclean
+
+all: $(LIB_NAME)
+
+$(LIB_NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) $(LDFLAGS) $(LDLIBS) -o $(LIB_NAME)
+
+$(OBJSDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 clean:
-	$(RM) *.o
+	$(RM) $(OBJS)
 
 distclean: clean
-	$(RM) priv/antl_phonenumber_nif.so
-
-antl_phonenumberso: $(OBJS)
-	$(CXX) -fPIC $(OBJS) -shared $(LDFLAGS) $(LDLIBS) -o priv/antl_phonenumber_nif.so
+	$(RM) $(LIB_NAME)
