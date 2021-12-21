@@ -59,9 +59,9 @@ The ranges can be ascendant or descendant.
 For example:
 
 ```elixir
-  range = Range.new("+33148413200", "+33148413210", "FR")
-  range = Range.new("0148413200", "0148413210", "FR")
-  range = Range.new("0148413210", "0148413200", "FR")
+  range = AntlPhonenumber.Range.new("+33148413200", "+33148413210", "FR")
+  range = AntlPhonenumber.Range.new("0148413200", "0148413210", "FR")
+  range = AntlPhonenumber.Range.new("0148413210", "0148413200", "FR")
 ```
 
 ### Testing
