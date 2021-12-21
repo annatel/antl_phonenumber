@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  check-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download latest earthly
+        run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.5.22/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'"
+
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Docker registry
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: earthly --build-arg TAG=$RELEASE_VERSION --build-arg CHECK_TAG=true +check-tag

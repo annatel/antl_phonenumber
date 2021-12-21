@@ -1,0 +1,93 @@
+VERSION 0.5
+
+elixir-base:
+    FROM elixir:1.12.2-alpine
+    RUN true
+    RUN apk add --no-progress --update openssh-client git build-base unzip
+    RUN mix local.rebar --force && mix local.hex --force
+
+    RUN apk add --no-progress --update git build-base
+    RUN apk --no-cache --update add libgcc libstdc++ \
+        git make g++ \
+        build-base gtest gtest-dev boost boost-dev cmake protobuf protobuf-dev icu icu-dev openssl \
+        && \
+        rm -rf /var/cache/apk/*
+
+    WORKDIR /tmp
+    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.12.39-antl-0.1.0/assets.zip
+    RUN unzip assets.zip
+    RUN mv /tmp/assets/lib/lib* /usr/local/lib
+    RUN mv /tmp/assets/include/ /usr/local/include
+    RUN rm -r assets
+    
+    WORKDIR /app
+
+deps:
+    ARG MIX_ENV
+    FROM +elixir-base
+    ENV MIX_ENV="$MIX_ENV"
+    COPY mix.exs .
+    COPY mix.lock .
+    RUN mix deps.get --only "$MIX_ENV"
+    RUN mix deps.compile
+
+compile-lint:
+    FROM earthly/dind:alpine
+    WORKDIR /test
+    
+    COPY --dir lib priv test cpp_src .
+    COPY Makefile .
+    COPY README.md .
+    COPY .formatter.exs .
+    
+    WITH DOCKER --load antl_phonenumber:latest=+deps --build-arg MIX_ENV="test"
+        RUN docker run \
+            --rm \
+            -e MIX_ENV=test \
+            -e EX_LOG_LEVEL=warn \
+            -v "$PWD/lib:/app/lib" \
+            -v "$PWD/priv:/app/priv" \
+            -v "$PWD/cpp_src:/app/cpp_src" \
+            -v "$PWD/test:/app/test" \
+            -v "$PWD/Makefile:/app/Makefile" \
+            -v "$PWD/README.md:/app/README.md" \
+            -v "$PWD/.formatter.exs:/app/.formatter.exs" \
+            -w /app \
+            --name antl_phonenumber \
+            antl_phonenumber:latest mix do format --check-formatted, compile --warnings-as-errors;
+        
+    END
+
+test:
+    FROM earthly/dind:alpine
+    WORKDIR /test
+    
+    COPY --dir lib priv test cpp_src .
+    COPY Makefile .
+    COPY README.md .
+    
+    WITH DOCKER --load antl_phonenumber:latest=+deps --build-arg MIX_ENV="test"
+        RUN docker run \
+            --rm \
+            -e MIX_ENV=test \
+            -e EX_LOG_LEVEL=warn \
+            -v "$PWD/lib:/app/lib" \
+            -v "$PWD/priv:/app/priv" \
+            -v "$PWD/cpp_src:/app/cpp_src" \
+            -v "$PWD/test:/app/test" \
+            -v "$PWD/Makefile:/app/Makefile" \
+            -v "$PWD/README.md:/app/README.md" \
+            -w /app \
+            --name antl_phonenumber \
+            antl_phonenumber:latest mix test;
+        
+    END
+
+check-tag:
+    ARG TAG
+    FROM +elixir-base
+    COPY mix.exs .
+    ARG APP_VERSION=$(mix app.version)
+    IF [ ! -z $TAG ] && [ ! $TAG == $APP_VERSION ]
+        RUN echo "TAG '$TAG' has to be equal to APP_VERSION '$APP_VERSION'" && false
+    END
