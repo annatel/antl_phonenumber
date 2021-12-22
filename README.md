@@ -2,7 +2,7 @@
 
 <!-- MDOC !-->
 AntlPhonenumber is a third-party port of the [google libphonenumber library](https://github.com/google/libphonenumber).
-The library is based on its cpp part and implements NIF functions.
+The library is based on google libphonenumber cpp implementation (major version 8) and implements NIF functions.
 
 ## Installation
 
