@@ -1,4 +1,5 @@
 # AntlPhonenumber
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/annatel/antl_phonenumber/CI?cacheSeconds=3600&style=flat-square)](https://github.com/annatel/antl_phonenumber/actions) [![GitHub issues](https://img.shields.io/github/issues-raw/annatel/antl_phonenumber?style=flat-square&cacheSeconds=3600)](https://github.com/annatel/antl_phonenumber/issues) [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?cacheSeconds=3600?style=flat-square)](http://opensource.org/licenses/MIT) [![Hex.pm](https://img.shields.io/hexpm/v/antl_phonenumber?style=flat-square)](https://hex.pm/packages/antl_phonenumber) [![Hex.pm](https://img.shields.io/hexpm/dt/antl_phonenumber?style=flat-square)](https://hex.pm/packages/antl_phonenumber)
 
 <!-- MDOC !-->
 AntlPhonenumber is a third-party port of the [google libphonenumber library](https://github.com/google/libphonenumber).\
