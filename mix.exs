@@ -36,7 +36,8 @@ defmodule AntlPhonenumber.MixProject do
   defp deps do
     [
       {:ecto, "~> 3.4", only: :test},
-      {:elixir_make, "~> 0.6", runtime: false}
+      {:elixir_make, "~> 0.6", runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 
