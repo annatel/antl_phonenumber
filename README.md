@@ -40,8 +40,8 @@ Example:
       field(:french_number, PlusE164, country_code: "FR")
     end
 ```
-PlusE164 fit our needs.\
-But any type can be created to express a combination of number characteristics. For instance, one could need a type for local french numbers. It is easy to implement another type based on PlusE164 implementation.
+PlusE164 fit our needs but any type can be created to express a combination of number characteristics. \
+For instance, one could need a type for local french numbers. It is easy to implement another type based on PlusE164 implementation.
 
 ### Ecto changeset
 Changeset validations are also a AntlPhonenumber feature.\
@@ -52,8 +52,7 @@ For the moment, the validators are:
   validate_type/3
 ```
 ### Ranges
-Number ranges are also supported and implement the Enumerable protocol so we can apply Enum functions on them.\
-The ranges can be ascendant or descendant.\
+Number ranges are also supported and implement the Enumerable protocol so we can apply Enum functions on them. The ranges can be ascendant or descendant. \
 For example:
 
 ```elixir
