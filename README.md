@@ -28,7 +28,7 @@ AntlPhonenumber provides a set of predicates and functions to check or manipulat
 It also provides a PlusE164 Ecto type ensuring the number will be dump and load only in plus e164 format.\
 A number in any other format won't be cast, as country code is required to format it in plus e164 format.\
 However, if `country_code` is specified, the type will ensure the number belongs to the given country code and casting will be performed accordingly to this country code.\
-In that case, any number of another country (a.k.a any plus_e164 of another country) will cause casting to fail.\
+In that case, any number of another country (a.k.a any plus_e164 of another country) will cause casting to fail.
 
 Example:
 
@@ -65,7 +65,7 @@ For example:
 ### Testing
 
 Google provides number examples. The function get_plus_e164_example/2, receiving a country code and a number type allow to request an example number.\
-It is useful for testing.\
+It is useful for testing.
 
 ```elixir
   AntlPhonenumber.get_plus_e164_example("FR", :mobile)
