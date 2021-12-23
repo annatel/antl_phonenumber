@@ -2,11 +2,9 @@ VERSION 0.5
 
 elixir-base:
     FROM elixir:1.12.2-alpine
-    RUN true
     RUN apk add --no-progress --update openssh-client git build-base unzip
     RUN mix local.rebar --force && mix local.hex --force
 
-    RUN apk add --no-progress --update git build-base
     RUN apk --no-cache --update add libgcc libstdc++ \
         git make g++ \
         build-base gtest gtest-dev boost boost-dev cmake protobuf protobuf-dev icu icu-dev openssl \
@@ -14,11 +12,9 @@ elixir-base:
         rm -rf /var/cache/apk/*
 
     WORKDIR /tmp
-    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.12.39-antl-0.1.0/assets.zip
-    RUN unzip assets.zip
-    RUN mv /tmp/assets/lib/lib* /usr/local/lib
-    RUN mv /tmp/assets/include/ /usr/local/include
-    RUN rm -r assets
+    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.12.39-antl-0.1.1/assets.zip
+    WORKDIR /usr/local
+    RUN unzip /tmp/assets.zip
     
     WORKDIR /app
 
@@ -72,7 +68,7 @@ test:
             -e MIX_ENV=test \
             -e EX_LOG_LEVEL=warn \
             -v "$PWD/lib:/app/lib" \
-            -v "$PWD/priv:/app/priv" \
+            -v "$PWD/priv/.gitignore:/app/priv/.gitignore" \
             -v "$PWD/cpp_src:/app/cpp_src" \
             -v "$PWD/test:/app/test" \
             -v "$PWD/Makefile:/app/Makefile" \
