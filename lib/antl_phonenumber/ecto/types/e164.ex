@@ -1,5 +1,5 @@
 if Code.ensure_loaded?(Ecto.ParameterizedType) do
-  defmodule AntlPhonenumber.Ecto.PlusE164 do
+  defmodule AntlPhonenumber.Ecto.E164 do
     @moduledoc """
     An Ecto type for plus_e164 formatted numbers.
 
@@ -9,8 +9,8 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
       use Ecto.Schema
 
       embedded_schema do
-        field(:number, PlusE164)
-        field(:french_number, PlusE164, country_code: "FR")
+        field(:number, E164)
+        field(:french_number, E164, country_code: "FR")
       end
     end
     """
@@ -29,7 +29,7 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
       with {:ok, plus_e164} <- AntlPhonenumber.to_plus_e164(number, country_code),
            true <- AntlPhonenumber.valid?(plus_e164),
            ^country_code <- AntlPhonenumber.get_country_code!(plus_e164) do
-        {:ok, plus_e164}
+        {:ok, AntlPhonenumber.to_e164!(plus_e164)}
       else
         _ -> :error
       end
@@ -37,7 +37,7 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
 
     def cast(number, %{}) when is_binary(number) do
       if AntlPhonenumber.valid_plus_e164_number?(number),
-        do: {:ok, number},
+        do: {:ok, AntlPhonenumber.to_e164!(number)},
         else: :error
     end
 
@@ -46,8 +46,10 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
 
     @spec load(binary | nil, fun, map) :: {:ok, t() | nil}
     def load(number, _, %{country_code: country_code}) when is_binary(number) do
-      with true <- AntlPhonenumber.valid_plus_e164_number?(number),
-           ^country_code <- AntlPhonenumber.get_country_code!(number) do
+      with {:ok, plus_e164} <- AntlPhonenumber.to_plus_e164(number, country_code),
+           true <- AntlPhonenumber.valid?(plus_e164),
+           ^country_code <- AntlPhonenumber.get_country_code!(plus_e164),
+           {:ok, ^number} <- AntlPhonenumber.to_e164(number, country_code) do
         {:ok, number}
       else
         _ -> :error
@@ -55,9 +57,12 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
     end
 
     def load(number, _, %{}) when is_binary(number) do
-      if AntlPhonenumber.valid_plus_e164_number?(number),
-        do: {:ok, number},
-        else: :error
+      with true <- AntlPhonenumber.valid_plus_e164_number?("+" <> number),
+           {:ok, ^number} <- AntlPhonenumber.to_e164("+" <> number) do
+        {:ok, number}
+      else
+        _ -> :error
+      end
     end
 
     def load(nil, _, _), do: {:ok, nil}
@@ -68,7 +73,7 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
       with {:ok, plus_e164} <- AntlPhonenumber.to_plus_e164(number, country_code),
            true <- AntlPhonenumber.valid?(plus_e164),
            ^country_code <- AntlPhonenumber.get_country_code!(plus_e164) do
-        {:ok, plus_e164}
+        {:ok, AntlPhonenumber.to_e164!(plus_e164)}
       else
         _ -> :error
       end
@@ -76,7 +81,7 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
 
     def dump(number, _, %{}) when is_binary(number) do
       if AntlPhonenumber.valid_plus_e164_number?(number),
-        do: {:ok, number},
+        do: {:ok, AntlPhonenumber.to_e164!(number)},
         else: :error
     end
 

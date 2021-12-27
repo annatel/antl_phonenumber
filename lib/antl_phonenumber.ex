@@ -8,7 +8,7 @@ defmodule AntlPhonenumber do
 
   @default_ref_country_code "IL"
   # @supported_formats ~w(e164 international national rfc3966)
-  @supported_formats ~w(e164 national)
+  @google_supported_formats ~w(e164 national)
   @supported_types ~w(premium_rate toll_free mobile fixed_line shared_cost voip personal_number pager uan voicemail)a
 
   @doc """
@@ -17,9 +17,9 @@ defmodule AntlPhonenumber do
   """
   @spec plus_e164?(binary) :: boolean
   def plus_e164?(number) do
-    case plus_e164(number, @default_ref_country_code) do
-      {:ok, plus_e164} -> plus_e164 == number
-      {:error, _} -> false
+    case to_plus_e164(number, @default_ref_country_code) do
+      {:ok, ^number} -> true
+      _ -> false
     end
   end
 
@@ -77,31 +77,82 @@ defmodule AntlPhonenumber do
 
   @doc """
   Format a number to plus_e164 format.
-  Note that a reference country_code is required.
+  Note that if the number is not formatted in plus_e164 format, a reference country_code is required..
   """
-  @spec plus_e164(binary, binary) :: {:ok, binary} | {:error, binary}
-  def plus_e164(number, ref_country_code) do
-    format(number, "e164", ref_country_code)
+  @spec to_plus_e164(binary, binary | nil) :: {:ok, binary} | {:error, binary}
+  def to_plus_e164(number) do
+    unless plus_e164?(number) do
+      raise ArgumentError,
+            "Missing reference country_code. Use to_plus_e164/2 to precise the country_code or provide a plus_e164."
+    end
+
+    {:ok, number}
+  end
+
+  def to_plus_e164(number, ref_country_code) do
+    google_format(number, "e164", ref_country_code)
   end
 
   @doc """
-  Same as `c:plus_e164/2`, but raises on parsing/formatting error.
+  Same as `c:to_plus_e164/2`, but raises on parsing/formatting error.
   """
-  @spec plus_e164!(binary, binary) :: binary
-  def plus_e164!(number, ref_country_code) do
-    format!(number, "e164", ref_country_code)
+  @spec to_plus_e164!(binary, binary | nil) :: binary
+  def to_plus_e164!(number) do
+    unless plus_e164?(number) do
+      raise ArgumentError,
+            "Missing reference country_code. Use to_plus_e164!/2 to precise the country_code or provide a plus_e164."
+    end
+
+    number
+  end
+
+  def to_plus_e164!(number, ref_country_code) do
+    google_format!(number, "e164", ref_country_code)
   end
 
   @doc """
   Format a number to e164 (without plus) format.
-  Note that a reference country_code is required.
-  Raises on parsing/formatting error.
+  Note that if the number is not formatted in plus_e164 format, a reference country_code is required.
   """
-  @spec e164!(binary, binary) :: binary
-  def e164!(number, ref_country_code) do
-    <<?+, e164::binary>> = number |> format!("e164", ref_country_code)
+  @spec to_e164(binary, binary | nil) :: {:ok, binary} | {:error, binary}
+  def to_e164(number) do
+    unless plus_e164?(number) do
+      raise ArgumentError,
+            "Missing reference country_code. Use to_e164/2 to precise the country_code or provide a plus_e164."
+    end
+
+    <<?+, e164::binary>> = number
+
+    {:ok, e164}
+  end
+
+  def to_e164(number, ref_country_code) do
+    case to_plus_e164(number, ref_country_code) do
+      {:ok, <<?+, e164::binary>>} -> {:ok, e164}
+      {:error, error} -> {:error, error}
+    end
+  end
+
+  @doc """
+  Same as `c:to_e164/2`, but raises on parsing/formatting error.
+  """
+  @spec to_e164!(binary, binary | nil) :: binary
+  def to_e164!(number) do
+    unless plus_e164?(number) do
+      raise ArgumentError,
+            "Missing reference country_code. Use to_e164!/2 to precise the country_code or provide a plus_e164."
+    end
+
+    <<?+, e164::binary>> = number
 
     e164
+  end
+
+  def to_e164!(number, ref_country_code) do
+    case to_e164(number, ref_country_code) do
+      {:ok, e164} when is_binary(e164) -> e164
+      {:error, error} -> raise error
+    end
   end
 
   @doc """
@@ -121,7 +172,7 @@ defmodule AntlPhonenumber do
   @spec localize(binary, binary) :: binary
   def localize(plus_e164, ref_country_code) do
     plus_e164
-    |> format!("national", ref_country_code)
+    |> google_format!("national", ref_country_code)
     |> String.replace("-", "")
     |> String.replace(" ", "")
   end
@@ -206,7 +257,7 @@ defmodule AntlPhonenumber do
   end
 
   def move(number, country_code, steps) when is_integer(steps) do
-    number |> plus_e164!(country_code) |> move(steps)
+    number |> to_plus_e164!(country_code) |> move(steps)
   end
 
   @doc false
@@ -223,16 +274,9 @@ defmodule AntlPhonenumber do
     String.to_integer(e164)
   end
 
-  defp format!(number, format, ref_country_code)
-       when is_binary(number) and format in @supported_formats and is_binary(ref_country_code) do
-    case format(number, format, ref_country_code) do
-      {:ok, formatted_number} -> formatted_number
-      {:error, error} -> raise error
-    end
-  end
-
-  defp format(number, format, ref_country_code)
-       when is_binary(number) and format in @supported_formats and is_binary(ref_country_code) do
+  defp google_format(number, format, ref_country_code)
+       when is_binary(number) and format in @google_supported_formats and
+              is_binary(ref_country_code) do
     {status, message} =
       Nif.format(
         to_charlist(number),
@@ -241,5 +285,14 @@ defmodule AntlPhonenumber do
       )
 
     {status, to_string(message)}
+  end
+
+  defp google_format!(number, format, ref_country_code)
+       when is_binary(number) and format in @google_supported_formats and
+              is_binary(ref_country_code) do
+    case google_format(number, format, ref_country_code) do
+      {:ok, formatted_number} -> formatted_number
+      {:error, error} -> raise error
+    end
   end
 end

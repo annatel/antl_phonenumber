@@ -24,8 +24,8 @@ defmodule AntlPhonenumber.Range do
   """
   @spec new(String.t(), String.t(), String.t()) :: t
   def new(first, last, country_code) when is_binary(first) and is_binary(last) do
-    first = AntlPhonenumber.plus_e164!(first, country_code)
-    last = AntlPhonenumber.plus_e164!(last, country_code)
+    first = AntlPhonenumber.to_plus_e164!(first, country_code)
+    last = AntlPhonenumber.to_plus_e164!(last, country_code)
 
     if AntlPhonenumber.get_country_code!(first) !=
          AntlPhonenumber.get_country_code!(last) do
@@ -57,7 +57,7 @@ defmodule AntlPhonenumber.Range do
     defp reduce(_, _, {:cont, acc}, _fun, _asc?), do: {:done, acc}
 
     def member?(%AntlPhonenumber.Range{} = range, number) do
-      case AntlPhonenumber.plus_e164(number, range.country_code) do
+      case AntlPhonenumber.to_plus_e164(number, range.country_code) do
         {:ok, plus_e164} -> {:ok, member_as_plus_e164?(range, plus_e164)}
         _ -> {:ok, false}
       end

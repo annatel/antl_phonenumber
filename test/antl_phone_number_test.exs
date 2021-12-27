@@ -66,54 +66,115 @@ defmodule AntlPhonenumberTest do
     refute AntlPhonenumber.possible?(not_number(), country_code)
   end
 
-  test "plus_e164/2" do
+  test "to_plus_e164/1" do
+    plus_e164 = plus_e164()
+
+    assert AntlPhonenumber.to_plus_e164(plus_e164) == {:ok, plus_e164}
+
+    assert_raise ArgumentError,
+                 "Missing reference country_code. Use to_plus_e164/2 to precise the country_code or provide a plus_e164.",
+                 fn -> assert AntlPhonenumber.to_plus_e164(local_number()) end
+  end
+
+  test "to_plus_e164/2" do
     plus_e164 = plus_e164()
 
     country_code =
       AntlPhonenumber.get_country_prefix!(plus_e164) |> AntlPhonenumber.to_country_code!()
 
-    assert {:ok, ^plus_e164} = AntlPhonenumber.plus_e164(plus_e164, country_code)
-    assert {:ok, ^plus_e164} = AntlPhonenumber.plus_e164(local_number(country_code), country_code)
-    assert {:error, "parsing error"} = AntlPhonenumber.plus_e164(not_number(), country_code)
+    assert {:ok, ^plus_e164} = AntlPhonenumber.to_plus_e164(plus_e164, country_code)
+
+    assert {:ok, ^plus_e164} =
+             AntlPhonenumber.to_plus_e164(local_number(country_code), country_code)
+
+    assert {:error, "parsing error"} = AntlPhonenumber.to_plus_e164(not_number(), country_code)
 
     assert {:error, "parsing error"} =
-             AntlPhonenumber.plus_e164(local_number(), "wrong_country_code")
+             AntlPhonenumber.to_plus_e164(local_number(), "wrong_country_code")
   end
 
-  test "plus_e164!/2" do
+  test "to_plus_e164!/1" do
+    plus_e164 = plus_e164()
+
+    assert AntlPhonenumber.to_plus_e164!(plus_e164) == plus_e164
+
+    assert_raise ArgumentError,
+                 "Missing reference country_code. Use to_plus_e164!/2 to precise the country_code or provide a plus_e164.",
+                 fn -> assert AntlPhonenumber.to_plus_e164!(local_number()) end
+  end
+
+  test "to_plus_e164!/2" do
     plus_e164 = plus_e164()
 
     country_code =
       AntlPhonenumber.get_country_prefix!(plus_e164) |> AntlPhonenumber.to_country_code!()
 
-    assert AntlPhonenumber.plus_e164!(plus_e164, country_code) == plus_e164
-    assert AntlPhonenumber.plus_e164!(local_number(country_code), country_code) == plus_e164
+    assert AntlPhonenumber.to_plus_e164!(plus_e164, country_code) == plus_e164
+    assert AntlPhonenumber.to_plus_e164!(local_number(country_code), country_code) == plus_e164
 
     assert_raise RuntimeError, "parsing error", fn ->
-      AntlPhonenumber.plus_e164!(local_number(), "country_code")
+      AntlPhonenumber.to_plus_e164!(local_number(), "country_code")
     end
 
     assert_raise RuntimeError, "parsing error", fn ->
-      AntlPhonenumber.plus_e164!(not_number(), country_code)
+      AntlPhonenumber.to_plus_e164!(not_number(), country_code)
     end
   end
 
-  test "e164!/2" do
+  test "to_e164/1" do
+    plus_e164 = plus_e164()
+    e164 = String.trim_leading(plus_e164, "+")
+
+    assert AntlPhonenumber.to_e164(plus_e164) == {:ok, e164}
+
+    assert_raise ArgumentError,
+                 "Missing reference country_code. Use to_e164/2 to precise the country_code or provide a plus_e164.",
+                 fn -> assert AntlPhonenumber.to_e164(local_number()) end
+  end
+
+  test "to_e164/2" do
     plus_e164 = plus_e164()
     e164 = String.trim_leading(plus_e164, "+")
 
     country_code =
       AntlPhonenumber.get_country_prefix!(plus_e164) |> AntlPhonenumber.to_country_code!()
 
-    assert AntlPhonenumber.e164!(plus_e164, country_code) == e164
-    assert AntlPhonenumber.e164!(local_number(country_code), country_code) == e164
+    assert AntlPhonenumber.to_e164(plus_e164, country_code) == {:ok, e164}
+    assert AntlPhonenumber.to_e164(local_number(country_code), country_code) == {:ok, e164}
+
+    assert AntlPhonenumber.to_e164(local_number(), "wrong_country_code") ==
+             {:error, "parsing error"}
+
+    assert AntlPhonenumber.to_e164(not_number(), country_code) == {:error, "parsing error"}
+  end
+
+  test "to_e164!/1" do
+    plus_e164 = plus_e164()
+    e164 = String.trim_leading(plus_e164, "+")
+
+    assert AntlPhonenumber.to_e164!(plus_e164) == e164
+
+    assert_raise ArgumentError,
+                 "Missing reference country_code. Use to_e164!/2 to precise the country_code or provide a plus_e164.",
+                 fn -> assert AntlPhonenumber.to_e164!(local_number()) end
+  end
+
+  test "to_e164!/2" do
+    plus_e164 = plus_e164()
+    e164 = String.trim_leading(plus_e164, "+")
+
+    country_code =
+      AntlPhonenumber.get_country_prefix!(plus_e164) |> AntlPhonenumber.to_country_code!()
+
+    assert AntlPhonenumber.to_e164!(plus_e164, country_code) == e164
+    assert AntlPhonenumber.to_e164!(local_number(country_code), country_code) == e164
 
     assert_raise RuntimeError, "parsing error", fn ->
-      AntlPhonenumber.e164!(local_number(), "wrong_country_code")
+      AntlPhonenumber.to_e164!(local_number(), "wrong_country_code")
     end
 
     assert_raise RuntimeError, "parsing error", fn ->
-      AntlPhonenumber.e164!(not_number(), country_code)
+      AntlPhonenumber.to_e164!(not_number(), country_code)
     end
   end
 

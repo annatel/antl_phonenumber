@@ -21,8 +21,8 @@ defmodule AntlPhonenumber.RangeTest do
       last = move(first, country_code, 10)
 
       assert %Range{} = range = Range.new(first, last, country_code)
-      assert range.first == AntlPhonenumber.plus_e164!(first, country_code)
-      assert range.last == AntlPhonenumber.plus_e164!(last, country_code)
+      assert range.first == AntlPhonenumber.to_plus_e164!(first, country_code)
+      assert range.last == AntlPhonenumber.to_plus_e164!(last, country_code)
       assert range.country_code == country_code
     end
 
@@ -50,7 +50,7 @@ defmodule AntlPhonenumber.RangeTest do
     last = move(first, country_code, 10)
 
     assert Range.new(first, last, country_code) |> inspect() ==
-             "#{first |> AntlPhonenumber.plus_e164!(country_code)}..#{last |> AntlPhonenumber.plus_e164!(country_code)}"
+             "#{first |> AntlPhonenumber.to_plus_e164!(country_code)}..#{last |> AntlPhonenumber.to_plus_e164!(country_code)}"
   end
 
   describe "Enumerable" do
