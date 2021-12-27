@@ -1,7 +1,7 @@
 if Code.ensure_loaded?(Ecto.ParameterizedType) do
   defmodule AntlPhonenumber.Ecto.E164 do
     @moduledoc """
-    An Ecto type for plus_e164 formatted numbers.
+    An Ecto type for e164 formatted numbers.
 
     It can be used like this:
 

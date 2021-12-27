@@ -270,8 +270,7 @@ defmodule AntlPhonenumber do
   def to_integer(plus_e164) do
     AntlPhonenumber.plus_e164?(plus_e164) || raise ""
 
-    <<?+, e164::binary>> = plus_e164
-    String.to_integer(e164)
+    plus_e164 |> to_e164!() |> String.to_integer()
   end
 
   defp google_format(number, format, ref_country_code)
