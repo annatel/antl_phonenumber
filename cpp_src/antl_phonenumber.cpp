@@ -75,12 +75,12 @@ PhoneNumberUtil::PhoneNumberType type_from_string(string type) {
 
 
 
-string format(string number, string format, string ref_country_code) {
+string format(string number, string format, string ref_iso_country_code) {
     PhoneNumber phone_number;
     std::string formatted_number;
 
     const PhoneNumberUtil& phone_util(*PhoneNumberUtil::GetInstance());
-    if(phone_util.Parse(number, ref_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
+    if(phone_util.Parse(number, ref_iso_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
         phone_util.Format(phone_number, format_from_string(format), &formatted_number);
         return formatted_number; 
     } else {
@@ -88,12 +88,12 @@ string format(string number, string format, string ref_country_code) {
     }
 }
 
-string get_type(string number, string ref_country_code) {
+string get_type(string number, string ref_iso_country_code) {
     PhoneNumber phone_number;
     PhoneNumberUtil::PhoneNumberType type;
 
     const PhoneNumberUtil& phone_util(*PhoneNumberUtil::GetInstance());
-    if(phone_util.Parse(number, ref_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
+    if(phone_util.Parse(number, ref_iso_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
       type = phone_util.GetNumberType(phone_number);
       return type_to_string(type);
     } else {
@@ -101,55 +101,55 @@ string get_type(string number, string ref_country_code) {
     }
 }
 
-int get_country_prefix(string number, string ref_country_code) {
+int get_country_code(string number, string ref_iso_country_code) {
     PhoneNumber phone_number;
-    int country_prefix;
+    int country_code;
 
     const PhoneNumberUtil& phone_util(*PhoneNumberUtil::GetInstance());
-    if(phone_util.Parse(number, ref_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
-      country_prefix = phone_number.country_code();
-      return country_prefix;
+    if(phone_util.Parse(number, ref_iso_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
+      country_code = phone_number.country_code();
+      return country_code;
     } else {
       return 0;
     }
 }
 
-string to_country_code(int country_prefix) {
-    string country_code;
+string to_iso_country_code(int country_code) {
+    string iso_country_code;
 
     const PhoneNumberUtil& phone_util(*PhoneNumberUtil::GetInstance());
-    phone_util.GetRegionCodeForCountryCode(country_prefix, &country_code);
-    return country_code;
+    phone_util.GetRegionCodeForCountryCode(country_code, &iso_country_code);
+    return iso_country_code;
 }
 
-bool is_valid(string number, string ref_country_code) {
+bool is_valid(string number, string ref_iso_country_code) {
     PhoneNumber phone_number;
 
     const PhoneNumberUtil& phone_util(*PhoneNumberUtil::GetInstance());
-    if(phone_util.Parse(number, ref_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
+    if(phone_util.Parse(number, ref_iso_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
       return phone_util.IsValidNumber(phone_number);
     } else {
       return false;
     }
 }
 
-bool is_possible(string number, string ref_country_code) {
+bool is_possible(string number, string ref_iso_country_code) {
     PhoneNumber phone_number;
 
     const PhoneNumberUtil& phone_util(*PhoneNumberUtil::GetInstance());
-    if(phone_util.Parse(number, ref_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
+    if(phone_util.Parse(number, ref_iso_country_code, &phone_number) == PhoneNumberUtil::NO_PARSING_ERROR) {
       return phone_util.IsPossibleNumber(phone_number);
     } else {
       return false;
     }
 }
 
-string get_plus_e164_example(string country_code, string type) {
+string get_plus_e164_example(string iso_country_code, string type) {
   PhoneNumber phone_number;
   string example_number;
 
   const PhoneNumberUtil& phone_util(*PhoneNumberUtil::GetInstance());
-  bool success = phone_util.GetExampleNumberForType(country_code, type_from_string(type), &phone_number);
+  bool success = phone_util.GetExampleNumberForType(iso_country_code, type_from_string(type), &phone_number);
   if(success) {
     phone_util.Format(phone_number, format_from_string("e164"), &example_number);
     return example_number;

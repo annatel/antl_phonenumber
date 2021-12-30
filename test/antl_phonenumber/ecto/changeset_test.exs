@@ -10,24 +10,24 @@ defmodule AntlPhonenumber.Ecto.ChangesetTest do
     end
   end
 
-  describe "validate_country_code/3" do
-    test "when the country_code is not the expected one" do
+  describe "validate_iso_country_code/3" do
+    test "when the iso_country_code is not the expected one" do
       changeset =
         %Schema{}
         |> Ecto.Changeset.cast(%{number: plus_e164("FR")}, [:number])
-        |> AntlPhonenumber.Ecto.Changeset.validate_country_code(:number, "BE")
+        |> AntlPhonenumber.Ecto.Changeset.validate_iso_country_code(:number, "BE")
 
       refute changeset.valid?
       assert errors_on(changeset).number == ["must be a BE number"]
     end
 
-    test "when the country_code is the expected one" do
-      country_code = country_code()
+    test "when the iso_country_code is the expected one" do
+      iso_country_code = iso_country_code()
 
       changeset =
         %Schema{}
-        |> Ecto.Changeset.cast(%{number: plus_e164(country_code)}, [:number])
-        |> AntlPhonenumber.Ecto.Changeset.validate_country_code(:number, country_code)
+        |> Ecto.Changeset.cast(%{number: plus_e164(iso_country_code)}, [:number])
+        |> AntlPhonenumber.Ecto.Changeset.validate_iso_country_code(:number, iso_country_code)
 
       assert changeset.valid?
     end
@@ -37,7 +37,7 @@ defmodule AntlPhonenumber.Ecto.ChangesetTest do
     test "when the type is not the expected one" do
       changeset =
         %Schema{}
-        |> Ecto.Changeset.cast(%{number: plus_e164(country_code(), :fixed_line)}, [
+        |> Ecto.Changeset.cast(%{number: plus_e164(iso_country_code(), :fixed_line)}, [
           :number
         ])
         |> AntlPhonenumber.Ecto.Changeset.validate_type(:number, :mobile)
@@ -51,7 +51,7 @@ defmodule AntlPhonenumber.Ecto.ChangesetTest do
 
       changeset =
         %Schema{}
-        |> Ecto.Changeset.cast(%{number: plus_e164(country_code(), type)}, [:number])
+        |> Ecto.Changeset.cast(%{number: plus_e164(iso_country_code(), type)}, [:number])
         |> AntlPhonenumber.Ecto.Changeset.validate_type(:number, type)
 
       assert changeset.valid?

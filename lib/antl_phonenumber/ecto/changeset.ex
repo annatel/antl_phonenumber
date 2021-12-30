@@ -5,12 +5,13 @@ if Code.ensure_loaded?(Ecto.Changeset) do
     """
     import Ecto.Changeset, only: [validate_change: 3]
 
-    @spec validate_country_code(Ecto.Changeset.t(), atom, binary) :: Ecto.Changeset.t()
-    def validate_country_code(changeset, field, country_code) when is_binary(country_code) do
+    @spec validate_iso_country_code(Ecto.Changeset.t(), atom, binary) :: Ecto.Changeset.t()
+    def validate_iso_country_code(changeset, field, iso_country_code)
+        when is_binary(iso_country_code) do
       validate_change(changeset, field, fn field, value ->
-        if AntlPhonenumber.get_country_code!(value) == country_code,
+        if AntlPhonenumber.get_iso_country_code!(value) == iso_country_code,
           do: [],
-          else: [{field, "must be a #{country_code} number"}]
+          else: [{field, "must be a #{iso_country_code} number"}]
       end)
     end
 

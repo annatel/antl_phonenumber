@@ -28,7 +28,7 @@ AntlPhonenumber provides a set of predicates and functions to check or manipulat
 ### Ecto types
 It also provides a PlusE164 Ecto type ensuring the number will be dump and load only in plus e164 format and a E164 Ecto type ensuring the number will be dump and load only in e164 format.\
 A number in any other format won't be cast, as country code is required to format it in plus e164 format.\
-However, if `country_code` is specified, the type will ensure the number belongs to the given country code and casting will be performed accordingly to this country code.\
+However, if `iso_country_code` is specified, the type will ensure the number belongs to the given country code and casting will be performed accordingly to this country code.\
 In that case, any number of another country (a.k.a any plus_e164 of another country) will cause casting to fail.
 
 Example:
@@ -38,7 +38,7 @@ Example:
 
     embedded_schema do
       field(:number, PlusE164)
-      field(:french_number, PlusE164, country_code: "FR")
+      field(:french_number, PlusE164, iso_country_code: "FR")
     end
 ```
 PlusE164 and E164 fit our needs but any type can be created to express a combination of number characteristics. \
@@ -49,7 +49,7 @@ Changeset validations are also a AntlPhonenumber feature.\
 For the moment, the validators are:
 
 ```elixir
-  validate_country_code/3
+  validate_iso_country_code/3
   validate_type/3
 ```
 ### Ranges

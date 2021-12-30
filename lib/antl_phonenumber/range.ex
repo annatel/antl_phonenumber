@@ -3,12 +3,12 @@ defmodule AntlPhonenumber.Range do
   Defines a range of phone numbers.
   """
 
-  defstruct first: nil, last: nil, country_code: nil
+  defstruct first: nil, last: nil, iso_country_code: nil
 
   @type t :: %__MODULE__{
           first: String.t(),
           last: String.t(),
-          country_code: String.t()
+          iso_country_code: String.t()
         }
 
   @doc """
@@ -19,22 +19,22 @@ defmodule AntlPhonenumber.Range do
       %AntlPhonenumber.Range{
         first: "972548451840",
         last: "972548451845",
-        country_code: "IL"
+        iso_country_code: "IL"
       }
   """
   @spec new(String.t(), String.t(), String.t()) :: t
-  def new(first, last, country_code) when is_binary(first) and is_binary(last) do
-    first = AntlPhonenumber.to_plus_e164!(first, country_code)
-    last = AntlPhonenumber.to_plus_e164!(last, country_code)
+  def new(first, last, iso_country_code) when is_binary(first) and is_binary(last) do
+    first = AntlPhonenumber.to_plus_e164!(first, iso_country_code)
+    last = AntlPhonenumber.to_plus_e164!(last, iso_country_code)
 
-    if AntlPhonenumber.get_country_code!(first) !=
-         AntlPhonenumber.get_country_code!(last) do
+    if AntlPhonenumber.get_iso_country_code!(first) !=
+         AntlPhonenumber.get_iso_country_code!(last) do
       raise ArgumentError,
             "ranges (first..last) expect both sides to have the same contry_code, " <>
               "got: #{inspect(first)}..#{inspect(last)}"
     end
 
-    %__MODULE__{first: first, last: last, country_code: country_code}
+    %__MODULE__{first: first, last: last, iso_country_code: iso_country_code}
   end
 
   defimpl Enumerable, for: AntlPhonenumber.Range do
@@ -57,7 +57,7 @@ defmodule AntlPhonenumber.Range do
     defp reduce(_, _, {:cont, acc}, _fun, _asc?), do: {:done, acc}
 
     def member?(%AntlPhonenumber.Range{} = range, number) do
-      case AntlPhonenumber.to_plus_e164(number, range.country_code) do
+      case AntlPhonenumber.to_plus_e164(number, range.iso_country_code) do
         {:ok, plus_e164} -> {:ok, member_as_plus_e164?(range, plus_e164)}
         _ -> {:ok, false}
       end
