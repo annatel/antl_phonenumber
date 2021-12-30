@@ -13,6 +13,12 @@ defmodule AntlPhonenumber.Ecto.E164Test do
       assert E164.cast(plus_e164() <> "00", %{}) == :error
     end
 
+    test "with valid e164, format it to e164" do
+      <<?+, e164::binary>> = plus_e164()
+
+      assert {:ok, ^e164} = E164.cast(e164, %{})
+    end
+
     test "with local_number, returns an error" do
       assert E164.cast(local_number() <> "00", %{}) == :error
     end
@@ -148,6 +154,11 @@ defmodule AntlPhonenumber.Ecto.E164Test do
 
     test "with not valid plus_e164 number, returns an error" do
       assert E164.dump(plus_e164() <> "00", fn -> :noop end, %{}) == :error
+    end
+
+    test "with valid e164, format it to e164" do
+      <<?+, e164::binary>> = plus_e164()
+      assert {:ok, ^e164} = E164.dump(e164, fn -> :noop end, %{})
     end
 
     test "with local_number, returns an error" do

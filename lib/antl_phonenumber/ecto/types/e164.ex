@@ -35,9 +35,15 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
       end
     end
 
+    def cast(<<?+, _::binary>> = plus_e164, %{}) do
+      if AntlPhonenumber.valid_plus_e164_number?(plus_e164),
+        do: {:ok, AntlPhonenumber.to_e164!(plus_e164)},
+        else: :error
+    end
+
     def cast(number, %{}) when is_binary(number) do
-      if AntlPhonenumber.valid_plus_e164_number?(number),
-        do: {:ok, AntlPhonenumber.to_e164!(number)},
+      if AntlPhonenumber.valid_plus_e164_number?("+" <> number),
+        do: {:ok, number},
         else: :error
     end
 
@@ -79,9 +85,15 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
       end
     end
 
+    def dump(<<?+, _::binary>> = plus_e164, _, %{}) do
+      if AntlPhonenumber.valid_plus_e164_number?(plus_e164),
+        do: {:ok, AntlPhonenumber.to_e164!(plus_e164)},
+        else: :error
+    end
+
     def dump(number, _, %{}) when is_binary(number) do
-      if AntlPhonenumber.valid_plus_e164_number?(number),
-        do: {:ok, AntlPhonenumber.to_e164!(number)},
+      if AntlPhonenumber.valid_plus_e164_number?("+" <> number),
+        do: {:ok, number},
         else: :error
     end
 
