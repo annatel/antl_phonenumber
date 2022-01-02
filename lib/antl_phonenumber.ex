@@ -288,9 +288,9 @@ defmodule AntlPhonenumber do
     plus_e164 |> to_e164!() |> String.to_integer()
   end
 
-  def google_format(number, format, ref_iso_country_code)
-      when is_binary(number) and format in @google_supported_formats and
-             is_binary(ref_iso_country_code) do
+  defp google_format(number, format, ref_iso_country_code)
+       when is_binary(number) and format in @google_supported_formats and
+              is_binary(ref_iso_country_code) do
     {status, message} =
       Nif.format(
         to_charlist(number),

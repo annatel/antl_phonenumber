@@ -39,6 +39,9 @@ Example:
     embedded_schema do
       field(:number, PlusE164)
       field(:french_number, PlusE164, iso_country_code: "FR")
+
+       field(:e164, E164)
+      field(:french_e164, E164, iso_country_code: "FR")
     end
 ```
 PlusE164 and E164 fit our needs but any type can be created to express a combination of number characteristics. \
