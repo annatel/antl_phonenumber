@@ -71,11 +71,11 @@ defmodule AntlPhonenumber.RangeTest do
 
       # reduce
       assert Range.new(first, last, iso_country_code)
-             |> Enum.map(&AntlPhonenumber.localize/1) == [
-               AntlPhonenumber.localize(first),
-               AntlPhonenumber.localize(move(first, 1)),
-               AntlPhonenumber.localize(move(first, 2)),
-               AntlPhonenumber.localize(move(first, 3))
+             |> Enum.map(&AntlPhonenumber.to_local/1) == [
+               AntlPhonenumber.to_local(first),
+               AntlPhonenumber.to_local(move(first, 1)),
+               AntlPhonenumber.to_local(move(first, 2)),
+               AntlPhonenumber.to_local(move(first, 3))
              ]
 
       # slice
@@ -102,11 +102,11 @@ defmodule AntlPhonenumber.RangeTest do
 
       # reduce
       assert Range.new(last, first, iso_country_code)
-             |> Enum.map(&AntlPhonenumber.localize/1) == [
-               AntlPhonenumber.localize(move(first, 3)),
-               AntlPhonenumber.localize(move(first, 2)),
-               AntlPhonenumber.localize(move(first, 1)),
-               AntlPhonenumber.localize(first)
+             |> Enum.map(&AntlPhonenumber.to_local/1) == [
+               AntlPhonenumber.to_local(move(first, 3)),
+               AntlPhonenumber.to_local(move(first, 2)),
+               AntlPhonenumber.to_local(move(first, 1)),
+               AntlPhonenumber.to_local(first)
              ]
 
       # slice

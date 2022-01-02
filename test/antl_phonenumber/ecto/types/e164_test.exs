@@ -55,7 +55,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     test "with local_number, valid for the iso_country_code, format it to e164" do
       plus_e164 = <<?+, e164::binary>> = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)
-      local_number = AntlPhonenumber.localize(plus_e164)
+      local_number = AntlPhonenumber.to_local(plus_e164)
 
       assert {:ok, ^e164} = E164.cast(local_number, %{iso_country_code: iso_country_code})
     end
@@ -63,7 +63,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     test "with local_number, invalid for the iso_country_code, returns an error" do
       plus_e164 = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)
-      local_number = AntlPhonenumber.localize(plus_e164)
+      local_number = AntlPhonenumber.to_local(plus_e164)
 
       assert E164.cast(local_number <> "00", %{iso_country_code: iso_country_code}) == :error
     end
@@ -133,7 +133,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     test "with local_number, returns an error" do
       plus_e164 = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)
-      local_number = AntlPhonenumber.localize(plus_e164)
+      local_number = AntlPhonenumber.to_local(plus_e164)
 
       assert E164.load(local_number, fn -> :noop end, %{iso_country_code: iso_country_code}) ==
                :error
@@ -206,7 +206,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     test "with local_number, valid for the iso_country_code, format it to plus_e164" do
       plus_e164 = <<?+, e164::binary>> = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)
-      local_number = AntlPhonenumber.localize(plus_e164)
+      local_number = AntlPhonenumber.to_local(plus_e164)
 
       assert {:ok, ^e164} =
                E164.dump(local_number, fn -> :noop end, %{iso_country_code: iso_country_code})
@@ -215,7 +215,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     test "with local_number, invalid for the iso_country_code, returns an error" do
       plus_e164 = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)
-      local_number = AntlPhonenumber.localize(plus_e164)
+      local_number = AntlPhonenumber.to_local(plus_e164)
 
       assert E164.dump(local_number <> "00", fn -> :noop end, %{
                iso_country_code: iso_country_code
