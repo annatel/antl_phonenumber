@@ -58,6 +58,7 @@ defmodule AntlPhonenumber.MixProject do
     [
       files: ~w(
         lib
+        priv
         .formatter.exs
         mix.exs
         README.md
