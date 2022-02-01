@@ -13,7 +13,7 @@ by adding `antl_phonenumber` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:antl_phonenumber, "~> 0.1.0"}
+    {:antl_phonenumber, "~> 0.1.1"}
   ]
 end
 ```
