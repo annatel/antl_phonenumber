@@ -1,7 +1,7 @@
 defmodule AntlPhonenumber.MixProject do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2"
   @url "https://github.com/annatel/antl_phonenumber"
 
   def project do
@@ -58,7 +58,7 @@ defmodule AntlPhonenumber.MixProject do
     [
       files: ~w(
         lib
-        priv
+        priv/.gitignore
         .formatter.exs
         mix.exs
         README.md
