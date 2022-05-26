@@ -10,7 +10,7 @@ defmodule AntlPhonenumber do
   # @supported_formats ~w(e164 international national rfc3966)
   @google_supported_formats ~w(e164 national)
   @supported_types ~w(premium_rate toll_free mobile fixed_line shared_cost voip personal_number pager uan voicemail)a
-  @missing_iso_country_code_error_message "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164."
+  @missing_iso_country_code_error_message "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164."
 
   @doc """
   Returns true if the number is well-formatted in plus_e164 format.

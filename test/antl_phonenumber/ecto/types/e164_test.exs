@@ -2,7 +2,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
   use AntlPhonenumber.Case
   alias AntlPhonenumber.Ecto.E164
 
-  describe "cast/2 - when the type does not precise the iso_country_code" do
+  describe "cast/2 - when the type does not specify the iso_country_code" do
     test "with valid plus_e164, format it to e164" do
       plus_e164 = <<?+, e164::binary>> = plus_e164()
 
@@ -36,7 +36,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     end
   end
 
-  describe "cast/2 - when the type precises the iso_country_code" do
+  describe "cast/2 - when the type specifys the iso_country_code" do
     test "with valid plus_e164 number, corresponding to the given country code, format it to e164" do
       plus_e164 = <<?+, e164::binary>> = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)
@@ -77,7 +77,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     end
   end
 
-  describe "load/3 - when the type does not precise the iso_country_code" do
+  describe "load/3 - when the type does not specify the iso_country_code" do
     test "with valid number in e164 format" do
       <<?+, e164::binary>> = plus_e164()
       assert {:ok, ^e164} = E164.load(e164, fn -> :noop end, %{})
@@ -109,7 +109,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     end
   end
 
-  describe "load/3 - when the type precises the iso_country_code" do
+  describe "load/3 - when the type specifys the iso_country_code" do
     test "with valid number, corresponding to the given country code, in e164 format, returns it" do
       plus_e164 = <<?+, e164::binary>> = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)
@@ -150,7 +150,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     end
   end
 
-  describe "dump/3 - when the type does not precise the iso_country_code" do
+  describe "dump/3 - when the type does not specify the iso_country_code" do
     test "with valid plus_e164, format it to e164" do
       plus_e164 = <<?+, e164::binary>> = plus_e164()
       assert {:ok, ^e164} = E164.dump(plus_e164, fn -> :noop end, %{})
@@ -182,7 +182,7 @@ defmodule AntlPhonenumber.Ecto.E164Test do
     end
   end
 
-  describe "dump/3 - when the type precises the iso_country_code" do
+  describe "dump/3 - when the type specifys the iso_country_code" do
     test "with valid plus_e164 number, corresponding to the given country code, format it to e164" do
       plus_e164 = <<?+, e164::binary>> = plus_e164()
       iso_country_code = AntlPhonenumber.get_iso_country_code!(plus_e164)

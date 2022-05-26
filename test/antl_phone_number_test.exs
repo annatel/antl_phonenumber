@@ -21,11 +21,11 @@ defmodule AntlPhonenumberTest do
     refute truncate(e164()) |> AntlPhonenumber.valid?()
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> local_number() |> AntlPhonenumber.valid?() end
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> not_number() |> AntlPhonenumber.valid?() end
   end
 
@@ -50,11 +50,11 @@ defmodule AntlPhonenumberTest do
     assert e164() |> AntlPhonenumber.possible?()
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> local_number() |> AntlPhonenumber.possible?() end
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn ->
                    not_number() |> AntlPhonenumber.possible?()
                  end
@@ -81,7 +81,7 @@ defmodule AntlPhonenumberTest do
     assert AntlPhonenumber.to_plus_e164(e164) == {:ok, plus_e164}
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> assert AntlPhonenumber.to_plus_e164(local_number()) end
   end
 
@@ -111,7 +111,7 @@ defmodule AntlPhonenumberTest do
     assert AntlPhonenumber.to_plus_e164!(e164) == plus_e164
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> assert AntlPhonenumber.to_plus_e164!(local_number()) end
   end
 
@@ -143,7 +143,7 @@ defmodule AntlPhonenumberTest do
     assert AntlPhonenumber.to_e164(e164) == {:ok, e164}
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> assert AntlPhonenumber.to_e164(local_number()) end
   end
 
@@ -172,7 +172,7 @@ defmodule AntlPhonenumberTest do
     assert AntlPhonenumber.to_e164!(e164) == e164
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> assert AntlPhonenumber.to_e164!(local_number()) end
   end
 
@@ -206,11 +206,11 @@ defmodule AntlPhonenumberTest do
              String.replace_leading(e164, "#{country_code}", "0")
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> AntlPhonenumber.to_local(local_number()) end
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> AntlPhonenumber.to_local(not_number()) end
   end
 
@@ -238,11 +238,11 @@ defmodule AntlPhonenumberTest do
     assert e164("IL", :mobile) |> AntlPhonenumber.get_type() == {:ok, :mobile}
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> AntlPhonenumber.get_type(local_number()) end
 
     assert_raise ArgumentError,
-                 "Missing reference iso_country_code. Please precise the iso_country_code or provide a e164/plus_e164.",
+                 "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164.",
                  fn -> AntlPhonenumber.get_type(not_number()) end
   end
 
