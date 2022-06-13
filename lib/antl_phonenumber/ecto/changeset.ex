@@ -15,18 +15,22 @@ if Code.ensure_loaded?(Ecto.Changeset) do
       end)
     end
 
-    @spec validate_type(Ecto.Changeset.t(), atom, atom) :: Ecto.Changeset.t()
-    def validate_type(changeset, field, type) when is_atom(type) do
+    @spec validate_type(Ecto.Changeset.t(), atom, [atom]) :: Ecto.Changeset.t()
+    def validate_type(changeset, field, type) do
+      types = List.wrap(type)
+
+      error_message =
+        case types do
+          [type] -> "must be a #{to_string(type)} number"
+          [_ | _] -> "must be one of #{inspect(types)}"
+        end
+
       validate_change(changeset, field, fn field, value ->
-        case AntlPhonenumber.get_type(value) do
-          {:ok, ^type} ->
-            []
-
-          {:ok, _} ->
-            [{field, "must be a #{to_string(type)} number"}]
-
+        with {:ok, type} <- AntlPhonenumber.get_type(value) do
+          if type in types, do: [], else: [{field, error_message}]
+        else
           {:error, error} when is_binary(error) ->
-            [{field, error}]
+            raise error
         end
       end)
     end

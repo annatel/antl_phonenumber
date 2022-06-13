@@ -56,6 +56,29 @@ defmodule AntlPhonenumber.Ecto.ChangesetTest do
 
       assert changeset.valid?
     end
+
+    test "when the type is one of the expected" do
+      type = :mobile
+
+      changeset =
+        %Schema{}
+        |> Ecto.Changeset.cast(%{number: plus_e164(iso_country_code(), type)}, [:number])
+        |> AntlPhonenumber.Ecto.Changeset.validate_type(:number, [type, :fixed_line])
+
+      assert changeset.valid?
+    end
+
+    test "when the type is not one of the expected" do
+      type = :mobile
+
+      changeset =
+        %Schema{}
+        |> Ecto.Changeset.cast(%{number: plus_e164(iso_country_code(), type)}, [:number])
+        |> AntlPhonenumber.Ecto.Changeset.validate_type(:number, [:fixed_line, :voip])
+
+      refute changeset.valid?
+      assert errors_on(changeset).number == ["must be one of [:fixed_line, :voip]"]
+    end
   end
 
   defp errors_on(changeset) do
