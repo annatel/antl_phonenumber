@@ -1,7 +1,7 @@
 defmodule AntlPhonenumber.MixProject do
   use Mix.Project
 
-  @version "0.1.3"
+  @version "0.1.4"
   @url "https://github.com/annatel/antl_phonenumber"
 
   def project do
