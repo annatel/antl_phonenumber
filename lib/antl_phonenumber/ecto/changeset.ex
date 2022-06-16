@@ -15,7 +15,7 @@ if Code.ensure_loaded?(Ecto.Changeset) do
       end)
     end
 
-    @spec validate_type(Ecto.Changeset.t(), atom, [atom]) :: Ecto.Changeset.t()
+    @spec validate_type(Ecto.Changeset.t(), atom, atom | [atom]) :: Ecto.Changeset.t()
     def validate_type(changeset, field, type) do
       types = List.wrap(type)
 
