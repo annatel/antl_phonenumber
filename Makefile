@@ -23,8 +23,8 @@ ifeq ($(KERNEL_NAME), Linux)
 	LDFLAGS += -fPIC -shared
 endif
 ifeq ($(KERNEL_NAME), Darwin)
-	CXXFLAGS += -fPIC -std=c++17
-	LDFLAGS += -dynamiclib -undefined dynamic_lookup
+	CXXFLAGS += -fPIC -std=c++17 -I/opt/homebrew/include
+	LDFLAGS += -dynamiclib -undefined dynamic_lookup -L/opt/homebrew/lib
 endif
 
 OBJSDIR=priv
