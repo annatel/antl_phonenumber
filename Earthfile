@@ -1,7 +1,7 @@
 VERSION 0.5
 
 elixir-base:
-    FROM elixir:1.12.2-alpine
+    FROM elixir:1.14.3-alpine
     RUN apk add --no-progress --update openssh-client git build-base unzip
     RUN mix local.rebar --force && mix local.hex --force
 
@@ -12,10 +12,10 @@ elixir-base:
         rm -rf /var/cache/apk/*
 
     WORKDIR /tmp
-    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.12.39-antl-0.1.1/assets.zip
+    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.13.22-antl-0.5.1/assets.zip
     WORKDIR /usr/local
     RUN unzip /tmp/assets.zip
-    
+
     WORKDIR /app
 
 deps:
@@ -30,12 +30,12 @@ deps:
 compile-lint:
     FROM earthly/dind:alpine
     WORKDIR /test
-    
+
     COPY --dir lib priv test cpp_src .
     COPY Makefile .
     COPY README.md .
     COPY .formatter.exs .
-    
+
     WITH DOCKER --load antl_phonenumber:latest=+deps --build-arg MIX_ENV="test"
         RUN docker run \
             --rm \
@@ -51,17 +51,17 @@ compile-lint:
             -w /app \
             --name antl_phonenumber \
             antl_phonenumber:latest mix do format --check-formatted, compile --warnings-as-errors;
-        
+
     END
 
 test:
     FROM earthly/dind:alpine
     WORKDIR /test
-    
+
     COPY --dir lib priv test cpp_src .
     COPY Makefile .
     COPY README.md .
-    
+
     WITH DOCKER --load antl_phonenumber:latest=+deps --build-arg MIX_ENV="test"
         RUN docker run \
             --rm \
@@ -76,7 +76,7 @@ test:
             -w /app \
             --name antl_phonenumber \
             antl_phonenumber:latest mix test;
-        
+
     END
 
 check-tag:
