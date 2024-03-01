@@ -10,6 +10,7 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
 
       embedded_schema do
         field(:number, PlusE164)
+        field(:number, PlusE164, default_iso_country_code: "FR")
         field(:french_number, PlusE164, iso_country_code: "FR")
       end
     end
@@ -29,6 +30,16 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
       with {:ok, plus_e164} <- AntlPhonenumber.to_plus_e164(number, iso_country_code),
            true <- AntlPhonenumber.valid?(plus_e164),
            ^iso_country_code <- AntlPhonenumber.get_iso_country_code!(plus_e164) do
+        {:ok, plus_e164}
+      else
+        _ -> :error
+      end
+    end
+
+    def cast(number, %{default_iso_country_code: default_iso_country_code})
+        when is_binary(number) do
+      with {:ok, plus_e164} <- AntlPhonenumber.to_plus_e164(number, default_iso_country_code),
+           true <- AntlPhonenumber.valid?(plus_e164) do
         {:ok, plus_e164}
       else
         _ -> :error
@@ -68,6 +79,15 @@ if Code.ensure_loaded?(Ecto.ParameterizedType) do
       with {:ok, plus_e164} <- AntlPhonenumber.to_plus_e164(number, iso_country_code),
            true <- AntlPhonenumber.valid?(plus_e164),
            ^iso_country_code <- AntlPhonenumber.get_iso_country_code!(plus_e164) do
+        {:ok, plus_e164}
+      else
+        _ -> :error
+      end
+    end
+
+    def dump(number, _, %{default_iso_country_code: iso_country_code}) when is_binary(number) do
+      with {:ok, plus_e164} <- AntlPhonenumber.to_plus_e164(number, iso_country_code),
+           true <- AntlPhonenumber.valid?(plus_e164) do
         {:ok, plus_e164}
       else
         _ -> :error
