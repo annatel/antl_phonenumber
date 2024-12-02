@@ -1,7 +1,7 @@
 VERSION 0.5
 
 elixir-base:
-    FROM elixir:1.14.3-alpine
+    FROM --platform=$BUILDPLATFORM elixir:1.14.3-alpine
     RUN apk add --no-progress --update openssh-client git build-base unzip
     RUN mix local.rebar --force && mix local.hex --force
 
@@ -12,7 +12,9 @@ elixir-base:
         rm -rf /var/cache/apk/*
 
     WORKDIR /tmp
-    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.13.51-antl-0.5.3/assets.zip
+    ARG TARGETOS
+    ARG TARGETARCH
+    RUN wget -O assets.zip https://github.com/annatel/libphonenumber/releases/download/v8.13.51-antl-0.5.3/assets_${TARGETOS}_${TARGETARCH}.zip
     WORKDIR /usr/local
     RUN unzip /tmp/assets.zip
 
@@ -28,7 +30,7 @@ deps:
     RUN mix deps.compile
 
 compile-lint:
-    FROM earthly/dind:alpine
+    FROM --platform=$BUILDPLATFORM earthly/dind:alpine
     WORKDIR /test
 
     COPY --dir lib priv test cpp_src .
@@ -55,7 +57,7 @@ compile-lint:
     END
 
 test:
-    FROM earthly/dind:alpine
+    FROM --platform=$BUILDPLATFORM earthly/dind:alpine
     WORKDIR /test
 
     COPY --dir lib priv test cpp_src .
