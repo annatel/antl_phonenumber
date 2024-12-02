@@ -12,7 +12,7 @@ elixir-base:
         rm -rf /var/cache/apk/*
 
     WORKDIR /tmp
-    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.13.22-antl-0.5.1/assets.zip
+    RUN wget https://github.com/annatel/libphonenumber/releases/download/v8.13.51-antl-0.5.3/assets.zip
     WORKDIR /usr/local
     RUN unzip /tmp/assets.zip
 
