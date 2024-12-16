@@ -1,7 +1,7 @@
 defmodule AntlPhonenumber.Nif do
   @on_load :init
 
-  @nif_path 'antl_phonenumber_nif'
+  @nif_path ~c"antl_phonenumber_nif"
   def init do
     path = :filename.join(:code.priv_dir(:antl_phonenumber), @nif_path)
 
