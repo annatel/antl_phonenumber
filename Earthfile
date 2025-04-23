@@ -1,4 +1,4 @@
-VERSION 0.5
+VERSION 0.6
 
 elixir-base:
     FROM --platform=$BUILDPLATFORM elixir:1.14.3-alpine
@@ -14,7 +14,7 @@ elixir-base:
     WORKDIR /tmp
     ARG TARGETOS
     ARG TARGETARCH
-    RUN wget -O assets.zip https://github.com/annatel/libphonenumber/releases/download/v8.13.55-antl-0.5.4/assets_${TARGETOS}_${TARGETARCH}.zip
+    RUN wget -O assets.zip https://github.com/annatel/libphonenumber/releases/download/v9.0.3-antl-0.6.0/libphonenumber_${TARGETARCH}-alpine-3.17.zip
     WORKDIR /usr/local
     RUN unzip /tmp/assets.zip
 
@@ -77,7 +77,7 @@ test:
             -v "$PWD/README.md:/app/README.md" \
             -w /app \
             --name antl_phonenumber \
-            antl_phonenumber:latest mix test;
+            antl_phonenumber:latest mix test --include annatel_specific;
 
     END
 
