@@ -1,7 +1,7 @@
 VERSION 0.6
 
 elixir-base:
-    FROM --platform=$BUILDPLATFORM elixir:1.14.3-alpine
+    FROM --platform=$BUILDPLATFORM elixir:1.18.4-alpine
     RUN apk add --no-progress --update openssh-client git build-base unzip
     RUN mix local.rebar --force && mix local.hex --force
 
@@ -14,7 +14,7 @@ elixir-base:
     WORKDIR /tmp
     ARG TARGETOS
     ARG TARGETARCH
-    RUN wget -O assets.zip https://github.com/annatel/libphonenumber/releases/download/v9.0.3-antl-0.6.1/libphonenumber_${TARGETARCH}-alpine-3.17.zip
+    RUN wget -O assets.zip https://github.com/AlexR2D2/libphonenumber/releases/download/v9.0.3-antl-0.6.2/libphonenumber_${TARGETARCH}-alpine-3.21.zip
     WORKDIR /usr/local
     RUN unzip /tmp/assets.zip
 
