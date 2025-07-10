@@ -1,7 +1,7 @@
 defmodule AntlPhonenumber.MixProject do
   use Mix.Project
 
-  @version "0.1.8"
+  @version "0.1.9"
   @url "https://github.com/annatel/antl_phonenumber"
 
   def project do
@@ -35,7 +35,7 @@ defmodule AntlPhonenumber.MixProject do
 
   defp deps do
     [
-      {:ecto, "~> 3.4", only: :test},
+      {:ecto, "~> 3.4"},
       {:elixir_make, "~> 0.6", runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
