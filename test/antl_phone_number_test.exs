@@ -256,21 +256,21 @@ defmodule AntlPhonenumberTest do
     assert AntlPhonenumber.get_type(not_number(), "IL") == {:error, "parsing error"}
   end
 
-  test "fixed_line?/1" do
-    assert plus_e164("IL", :fixed_line) |> AntlPhonenumber.fixed_line?()
-    assert plus_e164("IL", :voip) |> AntlPhonenumber.fixed_line?()
-    refute plus_e164("IL", :mobile) |> AntlPhonenumber.fixed_line?()
+  test "fixed_or_voip_line?/1" do
+    assert plus_e164("IL", :fixed_line) |> AntlPhonenumber.fixed_or_voip_line?()
+    assert plus_e164("IL", :voip) |> AntlPhonenumber.fixed_or_voip_line?()
+    refute plus_e164("IL", :mobile) |> AntlPhonenumber.fixed_or_voip_line?()
 
-    assert e164("IL", :fixed_line) |> AntlPhonenumber.fixed_line?()
-    refute e164("IL", :mobile) |> AntlPhonenumber.fixed_line?()
+    assert e164("IL", :fixed_line) |> AntlPhonenumber.fixed_or_voip_line?()
+    refute e164("IL", :mobile) |> AntlPhonenumber.fixed_or_voip_line?()
   end
 
-  test "fixed_line?/2" do
-    assert local_number("IL", :fixed_line) |> AntlPhonenumber.fixed_line?("IL")
-    assert local_number("IL", :voip) |> AntlPhonenumber.fixed_line?("IL")
-    refute local_number("IL", :mobile) |> AntlPhonenumber.fixed_line?("IL")
+  test "fixed_or_voip_line?/2" do
+    assert local_number("IL", :fixed_line) |> AntlPhonenumber.fixed_or_voip_line?("IL")
+    assert local_number("IL", :voip) |> AntlPhonenumber.fixed_or_voip_line?("IL")
+    refute local_number("IL", :mobile) |> AntlPhonenumber.fixed_or_voip_line?("IL")
 
-    refute AntlPhonenumber.fixed_line?(not_number(), "IL")
+    refute AntlPhonenumber.fixed_or_voip_line?(not_number(), "IL")
   end
 
   test "get_country_code!/1" do
