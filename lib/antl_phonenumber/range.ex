@@ -74,20 +74,20 @@ defmodule AntlPhonenumber.Range do
 
     def slice(%AntlPhonenumber.Range{} = range) do
       if asc?(range),
-        do: {:ok, Enum.count(range), &slice_asc(move(range.first, &1), &2)},
-        else: {:ok, Enum.count(range), &slice_desc(move(range.first, -&1), &2)}
+        do: {:ok, Enum.count(range), &slice_asc(move(range.first, &1), &2, &3)},
+        else: {:ok, Enum.count(range), &slice_desc(move(range.first, -&1), &2, &3)}
     end
 
-    defp slice_asc(current, 1), do: [current]
+    defp slice_asc(current, 1, _step), do: [current]
 
-    defp slice_asc(current, remaining) do
-      [current | slice_asc(next(current), remaining - 1)]
+    defp slice_asc(current, remaining, step) do
+      [current | slice_asc(move(current, step), remaining - 1, step)]
     end
 
-    defp slice_desc(current, 1), do: [current]
+    defp slice_desc(current, 1, _step), do: [current]
 
-    defp slice_desc(current, remaining) do
-      [current | slice_desc(previous(current), remaining - 1)]
+    defp slice_desc(current, remaining, step) do
+      [current | slice_desc(move(current, -step), remaining - 1, step)]
     end
 
     defp asc?(%AntlPhonenumber.Range{} = range), do: range.first <= range.last
