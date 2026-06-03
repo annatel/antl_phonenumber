@@ -217,7 +217,11 @@ defmodule AntlPhonenumber do
 
   @spec fixed_or_voip_line?(binary, binary | nil) :: boolean
   def fixed_or_voip_line?(number, ref_iso_country_code),
-    do: match?({:ok, type} when type in @fixed_or_voip_line_types, get_type(number, ref_iso_country_code))
+    do:
+      match?(
+        {:ok, type} when type in @fixed_or_voip_line_types,
+        get_type(number, ref_iso_country_code)
+      )
 
   @doc """
   Returns the country code of the number.
