@@ -10,6 +10,7 @@ defmodule AntlPhonenumber do
   # @supported_formats ~w(e164 international national rfc3966)
   @google_supported_formats ~w(e164 national)
   @supported_types ~w(premium_rate toll_free mobile fixed_line shared_cost voip personal_number pager uan voicemail)a
+  @fixed_or_voip_line_types ~w(fixed_line voip)a
   @missing_iso_country_code_error_message "Missing reference iso_country_code. Please specify the iso_country_code or provide a e164/plus_e164."
 
   @doc """
@@ -203,6 +204,24 @@ defmodule AntlPhonenumber do
       {:error, reason} -> {:error, reason}
     end
   end
+
+  @doc """
+  Returns true if the number's type is :fixed_line or :voip, false otherwise.
+
+  Note that if the number is not formatted in plus_e164 nor in e164 format,
+  a reference iso_country_code is required.
+  """
+  @spec fixed_or_voip_line?(binary) :: boolean
+  def fixed_or_voip_line?(number),
+    do: match?({:ok, type} when type in @fixed_or_voip_line_types, get_type(number))
+
+  @spec fixed_or_voip_line?(binary, binary | nil) :: boolean
+  def fixed_or_voip_line?(number, ref_iso_country_code),
+    do:
+      match?(
+        {:ok, type} when type in @fixed_or_voip_line_types,
+        get_type(number, ref_iso_country_code)
+      )
 
   @doc """
   Returns the country code of the number.
