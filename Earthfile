@@ -14,7 +14,7 @@ elixir-base:
     WORKDIR /tmp
     ARG TARGETOS
     ARG TARGETARCH
-    RUN wget -O assets.zip https://github.com/annatel/libphonenumber/releases/download/v9.0.28-antl-0.8.0/libphonenumber_${TARGETARCH}-alpine-3.22.zip
+    RUN wget -O assets.zip https://github.com/annatel/libphonenumber/releases/download/v9.0.36-antl-0.9.0/libphonenumber_${TARGETARCH}-alpine-3.22.zip
     WORKDIR /usr/local
     RUN unzip /tmp/assets.zip
 
